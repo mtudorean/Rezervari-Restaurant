@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rezervările mele — Flavour House</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-header { background: linear-gradient(160deg, var(--maro) 0%, var(--maro-med) 100%); padding: 5rem 1.5rem 3rem; text-align: center; }
+    .page-header p { font-size: 11px; letter-spacing: 0.2em; color: var(--auriu); text-transform: uppercase; margin-bottom: 0.8rem; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--crem); }
+    .content { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; width: 100%; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .top-bar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--maro); }
+    .rezervare-card {
+      background: var(--alb); border-radius: var(--radius-lg);
+      padding: 1.5rem; border: 1px solid rgba(212,206,198,0.5);
+      margin-bottom: 1rem; display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 1rem;
+      transition: box-shadow var(--transition);
+    }
+    .rezervare-card:hover { box-shadow: var(--shadow); }
+    .rez-info { flex: 1; }
+    .rez-titlu { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--maro); margin-bottom: 0.5rem; }
+    .rez-detalii { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--gri); margin-bottom: 0.8rem; }
+    .rez-detalii span { display: flex; align-items: center; gap: 4px; }
+    .rez-obs { font-size: 13px; color: var(--gri); font-style: italic; }
+    .rez-actiuni { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .gol-state { text-align: center; padding: 4rem 2rem; color: var(--gri); }
+    .gol-state p { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body class="sticky-footer-layout">
+
+<nav>
+  <a href="index.html" class="nav-logo">Flavour <span>House</span></a>
+  <div class="nav-links">
+    <a href="index.html">Acasă</a>
+    <a href="rezervare.html">Rezervare nouă</a>
+    <a href="#" class="btn-nav" onclick="logout(event)">Ieși din cont</a>
+  </div>
+</nav>
+
+<div class="main-wrapper">
+  
+  <div class="page-header">
+    <p>Contul meu</p>
+    <h1>Rezervările mele</h1>
+  </div>
+
+  <div class="content">
+    <div class="top-bar">
+      <h2 id="titlu-sectiune">Se încarcă...</h2>
+      <a href="rezervare.html" class="btn btn-primary">+ Rezervare nouă</a>
+    </div>
+
+    <div id="alert" class="alert"></div>
+    <div id="lista-rezervari"></div>
+  </div>
+
+</div> 
+
+<footer><p>© 2026 <span>Flavour House</span> Restaurant</p></footer>
+
+<script>
+const token = localStorage.getItem('token');
+const utilizator = JSON.parse(localStorage.getItem('utilizator') || 'null');
+if (!token) window.location.href = 'login.html';
+
+function logout(e) {
+  e.preventDefault();
+  localStorage.removeItem('token');
+  localStorage.removeItem('utilizator');
+  window.location.href = 'login.html';
+}
+
+function formatData(dataStr) {
+  const d = new Date(dataStr);
+  return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+async function incarcaRezervari() {
+  const lista = document.getElementById('lista-rezervari');
+  const titlu = document.getElementById('titlu-sectiune');
+
+  try {
+    const res  = await fetch('/api/rezervari/ale-mele', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const date = await res.json();
+
+    titlu.textContent = `${date.length} rezerv${date.length === 1 ? 'are' : 'ări'}`;
+
+    if (!date.length) {
+      lista.innerHTML = `
+        <div class="gol-state">
+          <p>Nu ai nicio rezervare încă</p>
+          <a href="rezervare.html" class="btn btn-primary">Fă prima rezervare</a>
+        </div>`;
+      return;
+    }
+
+    lista.innerHTML = date.map(r => `
+      <div class="rezervare-card fade-in" id="rez-${r.id}">
+        <div class="rez-info">
+          <div class="rez-titlu">Masa ${r.numar_masa} — ${r.locatie}</div>
+          <div class="rez-detalii">
+            <span>📅 ${formatData(r.data)}</span>
+            <span>🕐 ${r.ora.slice(0,5)}</span>
+            <span>👥 ${r.nr_persoane} pers.</span>
+          </div>
+          ${r.observatii ? `<div class="rez-obs">📝 ${r.observatii}</div>` : ''}
+        </div>
+        <div class="rez-actiuni">
+          <span class="badge badge-${r.status === 'confirmata' ? 'confirmata' : r.status === 'anulata' ? 'anulata' : 'asteptare'}">
+            ${r.status === 'confirmata' ? '✓ Confirmată' : r.status === 'anulata' ? '✗ Anulată' : '⏳ În așteptare'}
+          </span>
+          ${r.status !== 'anulata' ? `<button class="btn btn-danger btn-sm" onclick="anuleaza(${r.id})">Anulează</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    lista.innerHTML = '<p style="color:var(--rosu)">Eroare la încărcarea rezervărilor.</p>';
+  }
+}
+
+async function anuleaza(id) {
+  if (!confirm('Ești sigur că vrei să anulezi această rezervare?')) return;
+  const alertEl = document.getElementById('alert');
+
+  try {
+    const res  = await fetch(`/api/rezervari/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const date = await res.json();
+
+    if (!res.ok) {
+      alertEl.className = 'alert alert-error show';
+      alertEl.textContent = date.mesaj;
+      return;
+    }
+
+    alertEl.className = 'alert alert-success show';
+    alertEl.textContent = 'Rezervarea a fost anulată.';
+    incarcaRezervari();
+  } catch (e) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Eroare de conexiune.';
+  }
+}
+
+incarcaRezervari();
+</script>
+</body>
+</html>
