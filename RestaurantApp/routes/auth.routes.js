@@ -1,8 +1,34 @@
-const express = require('express');
-const router  = express.Router();
+const express  = require('express');
+const router   = express.Router();
+const passport = require('passport');
+const jwt      = require('jsonwebtoken');
 const { register, login } = require('../controllers/authController');
 
+// ── Rute normale ──────────────────────────────────────────────
 router.post('/register', register);
 router.post('/login',    login);
+
+// ── Google OAuth ──────────────────────────────────────────────
+
+// 1. Redirect catre Google
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// 2. Callback dupa autentificare Google
+router.get('/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login.html?error=google' }),
+  (req, res) => {
+    const token = jwt.sign(
+      { id: req.user.id, rol: req.user.rol, nume: req.user.nume },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES || '24h' }
+    );
+
+    res.redirect(
+      `/auth-success.html?token=${token}&nume=${encodeURIComponent(req.user.nume)}&email=${encodeURIComponent(req.user.email)}&rol=${req.user.rol}&id=${req.user.id}`
+    );
+  }
+);
 
 module.exports = router;
