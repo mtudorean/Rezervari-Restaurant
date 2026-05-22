@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Autentificare reusita...</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; text-align: center;
+    }
+    .loading-box { max-width: 360px; }
+    .spinner {
+      width: 48px; height: 48px; border: 4px solid var(--crem-dark);
+      border-top-color: var(--auriu); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h2 { font-family: 'Playfair Display', serif; color: var(--maro); margin-bottom: 0.5rem; }
+    p  { color: var(--gri); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <h2>Autentificare reusita!</h2>
+    <p>Te redirectionam...</p>
+  </div>
+
+  <script>
+    // Preluam datele din URL
+    const params   = new URLSearchParams(window.location.search);
+    const token    = params.get('token');
+    const nume     = params.get('nume');
+    const email    = params.get('email');
+    const rol      = params.get('rol');
+    const id       = params.get('id');
+
+    if (token) {
+      // Salvam in localStorage exact ca la login normal
+      localStorage.setItem('token', token);
+      localStorage.setItem('utilizator', JSON.stringify({ id, nume, email, rol }));
+
+      // Redirectam in functie de rol
+      setTimeout(() => {
+        window.location.href = rol === 'admin'
+          ? 'admin/dashboard.html'
+          : 'rezervarile-mele.html';
+      }, 800);
+    } else {
+      window.location.href = 'login.html?error=google';
+    }
+  </script>
+</body>
+</html>
