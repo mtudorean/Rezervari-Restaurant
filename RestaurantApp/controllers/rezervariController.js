@@ -1,6 +1,5 @@
 const db = require('../config/db');
 
-// GET /api/rezervari  (doar admin)
 const getToateRezervariле = async (req, res) => {
   try {
     const [rezervari] = await db.query(`
@@ -17,7 +16,6 @@ const getToateRezervariле = async (req, res) => {
   }
 };
 
-// GET /api/rezervari/ale-mele  (client autentificat)
 const getRezervariUtilizator = async (req, res) => {
   try {
     const [rezervari] = await db.query(`
@@ -33,7 +31,6 @@ const getRezervariUtilizator = async (req, res) => {
   }
 };
 
-// POST /api/rezervari
 const creeazaRezervare = async (req, res) => {
   const { masa_id, data, ora, nr_persoane, observatii } = req.body;
 
@@ -42,11 +39,10 @@ const creeazaRezervare = async (req, res) => {
   }
 
   try {
-    // Verificam daca masa e disponibila la data si ora selectata
     const [conflict] = await db.query(`
       SELECT id FROM rezervari
       WHERE masa_id = ? AND data = ? AND ora = ?
-      AND status != 'anulata'
+      AND status IN ('confirmata', 'in_asteptare')
     `, [masa_id, data, ora]);
 
     if (conflict.length > 0) {
@@ -67,7 +63,6 @@ const creeazaRezervare = async (req, res) => {
   }
 };
 
-// PUT /api/rezervari/:id/status  (admin)
 const actualizeazaStatus = async (req, res) => {
   const { status } = req.body;
   const statusuriValide = ['in_asteptare', 'confirmata', 'anulata'];
@@ -87,7 +82,6 @@ const actualizeazaStatus = async (req, res) => {
   }
 };
 
-// DELETE /api/rezervari/:id  (client — doar rezervarile proprii)
 const anuleazaRezervare = async (req, res) => {
   try {
     const [rezervari] = await db.query(
@@ -109,7 +103,6 @@ const anuleazaRezervare = async (req, res) => {
   }
 };
 
-// GET /api/rezervari/disponibile?data=&ora=
 const getMeseDisponibile = async (req, res) => {
   const { data, ora } = req.query;
 
@@ -123,7 +116,7 @@ const getMeseDisponibile = async (req, res) => {
       WHERE este_activa = TRUE
       AND id NOT IN (
         SELECT masa_id FROM rezervari
-        WHERE data = ? AND ora = ? AND status != 'anulata'
+        WHERE data = ? AND ora = ? AND status IN ('confirmata', 'in_asteptare')
       )
       ORDER BY numar
     `, [data, ora]);
@@ -141,4 +134,3 @@ module.exports = {
   anuleazaRezervare,
   getMeseDisponibile
 };
-
