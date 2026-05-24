@@ -2,13 +2,13 @@ const express  = require('express');
 const router   = express.Router();
 const passport = require('passport');
 const jwt      = require('jsonwebtoken');
-const { register, login } = require('../controllers/authController');
+
+const { register, login, schimbaParola } = require('../controllers/authController');
+const { verifyToken } = require('../middleware/verifyToken');
 
 // ── Rute normale ──────────────────────────────────────────────
 router.post('/register', register);
 router.post('/login',    login);
-
-// ── Google OAuth ──────────────────────────────────────────────
 
 // 1. Redirect catre Google
 router.get('/google',
@@ -30,5 +30,8 @@ router.get('/google/callback',
     );
   }
 );
+
+// Ruta pentru schimbarea parolei (acum va funcționa pentru că am importat funcția sus)
+router.put('/schimba-parola', verifyToken, schimbaParola);
 
 module.exports = router;
