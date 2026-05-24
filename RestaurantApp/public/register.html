@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
   <title>Înregistrare — Flavour House</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -29,13 +31,21 @@
 
     .auth-banner {
       background: linear-gradient(160deg, var(--maro-med) 0%, var(--maro) 100%);
-      padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center;
+      padding: 3rem 2.5rem; display: flex; flex-direction: column; 
+      justify-content: center; align-items: center; text-align: center;
       position: relative; overflow: hidden;
     }
 
     .auth-banner::before {
       content: '✨'; font-size: 12rem; position: absolute;
       right: -2rem; bottom: -2rem; opacity: 0.08; line-height: 1;
+    }
+
+    .auth-banner-logo {
+      height: 120px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 2rem;
     }
 
     .auth-banner-label { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; color: var(--auriu); text-transform: uppercase; margin-bottom: 1rem; }
@@ -89,6 +99,7 @@
 
 <div class="auth-wrapper">
   <div class="auth-banner">
+    <img src="logo.png" alt="Logo Flavour House" class="auth-banner-logo">
     <p class="auth-banner-label">Alătură-te nouă</p>
     <h2>Creează-ți contul gratuit</h2>
     <p>Rezervă mese, gestionează rezervările tale și lasă recenzii pentru preparatele preferate.</p>
@@ -100,7 +111,6 @@
 
     <div id="alert" class="alert"></div>
 
-    <!-- Buton Google -->
     <a href="/api/auth/google" class="btn-google">
       <svg class="google-icon" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

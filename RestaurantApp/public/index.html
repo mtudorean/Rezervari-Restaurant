@@ -3,10 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
   <title>Flavour House</title>
   <link rel="stylesheet" href="style.css">
   <style>
     /* Hero */
+    .nav-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px; 
+}
+
+.logo-img {
+  height: 55px; 
+  width: auto;  
+  object-fit: contain;
+}
     .hero {
       min-height: 100vh;
       background: linear-gradient(160deg, var(--maro) 0%, var(--maro-med) 100%);
@@ -60,7 +73,7 @@
       font-weight: 700; color: var(--maro);
       line-height: 1.2; margin-bottom: 1.2rem;
     }
-    .section-desc { color: var(--gri); max-width: 520px; }
+    .section-desc { color: var(--gri); max-width: 540px; }
 
     /* Meniu preview */
     .meniu-grid {
@@ -84,7 +97,7 @@
     }
     .preparat-nume {
       font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; font-weight: 600; color: var(--maro);
+      font-size: 1.2rem; font-weight: 600; color: var(--maro);
       margin-bottom: 0.4rem;
     }
     .preparat-desc { font-size: 13px; color: var(--gri); margin-bottom: 1rem; }
@@ -104,7 +117,7 @@
       border: 1px solid rgba(212,206,198,0.5);
     }
     .info-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    .info-titlu { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--maro); margin-bottom: 0.4rem; }
+    .info-titlu { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--maro); margin-bottom: 0.4rem; }
     .info-text { font-size: 14px; color: var(--gri); }
 
     /* ── SECTIUNEA DESPRE ── */
@@ -159,10 +172,10 @@
     }
     .valoare-titlu {
       font-family: 'Playfair Display', serif;
-      font-size: 0.95rem; font-weight: 600; color: var(--maro);
+      font-size: 1.25rem; font-weight: 600; color: var(--maro);
       margin-bottom: 3px;
     }
-    .valoare-text { font-size: 12px; color: var(--gri); line-height: 1.5; }
+    .valoare-text { font-size: 13px; color: var(--gri); line-height: 1.5; }
 
     .membru-card {
       text-align: center; background: var(--alb);
@@ -199,6 +212,126 @@
     }
     .cta-section p { color: rgba(245,240,232,0.7); margin-bottom: 2rem; }
 
+    /* ── Buton recenzii pe card ── */
+    .btn-recenzii {
+      width: 100%; margin-top: 0.8rem; padding: 8px 14px;
+      border: 1.5px solid var(--gri-light); border-radius: var(--radius);
+      background: transparent; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; color: var(--maro-med);
+      cursor: pointer; transition: all var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-recenzii:hover {
+      border-color: var(--auriu); color: var(--maro);
+      background: rgba(200,146,42,0.06);
+    }
+    .recenzii-count { color: var(--auriu); font-size: 12px; }
+
+    /* ── Modal recenzii ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(44,26,14,0.55); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+      background: var(--alb); border-radius: var(--radius-lg);
+      width: 100%; max-width: 520px; max-height: 80vh;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 60px rgba(44,26,14,0.25);
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--crem-dark);
+    }
+    .modal-header h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--maro);
+    }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: var(--crem-dark); cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--maro); transition: background var(--transition);
+    }
+    .modal-close:hover { background: var(--gri-light); }
+    .modal-body { overflow-y: auto; padding: 1.5rem; flex: 1; }
+    .modal-medie {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.2rem; background: var(--crem-dark);
+      border-radius: var(--radius-lg); margin-bottom: 1.2rem;
+    }
+    .modal-medie-nr {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem; font-weight: 700; color: var(--auriu); line-height: 1;
+    }
+    .modal-recenzii-lista { display: flex; flex-direction: column; gap: 1rem; }
+    .modal-recenzie-item {
+      display: flex; gap: 10px; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--crem-dark);
+    }
+    .modal-recenzie-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .modal-recenzie-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--maro) 0%, var(--maro-med) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: var(--auriu);
+    }
+    .modal-recenzie-cont { flex: 1; }
+    .modal-recenzie-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 4px; flex-wrap: wrap;
+    }
+    .modal-stele { color: var(--auriu); font-size: 13px; }
+    .modal-recenzie-text { font-size: 13px; color: var(--gri); line-height: 1.5; }
+
+    /* ── Bara cautare + filtre ── */
+    .meniu-controls {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      align-items: center; margin-top: 2rem;
+    }
+    .meniu-search-wrap {
+      flex: 1; min-width: 220px; position: relative;
+    }
+    .meniu-search-wrap input {
+      width: 100%; padding: 10px 14px 10px 38px;
+      border: 1.5px solid var(--gri-light); border-radius: var(--radius);
+      background: var(--alb); font-family: 'DM Sans', sans-serif;
+      font-size: 16px; color: var(--maro); outline: none;
+      transition: border-color 0.2s; box-sizing: border-box;
+    }
+    .meniu-search-wrap input:focus { border-color: var(--auriu); }
+    .meniu-search-wrap .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; color: var(--gri); pointer-events: none;
+    }
+    .filtru-categorii { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; }
+    .filtru-btn {
+      padding: 7px 14px; border-radius: 99px;
+      border: 1.5px solid var(--gri-light); background: transparent;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+      color: var(--maro-med); cursor: pointer; transition: all 0.2s;
+    }
+    .filtru-btn:hover { border-color: var(--auriu); color: var(--maro); }
+    .filtru-btn.activ {
+      background: var(--auriu); border-color: var(--auriu);
+      color: var(--maro); font-weight: 600;
+    }
+    .sort-select {
+      padding: 9px 14px; border-radius: var(--radius);
+      border: 1.5px solid var(--gri-light); background: var(--alb);
+      font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--maro);
+      cursor: pointer; outline: none; transition: border-color 0.2s;
+    }
+    .sort-select:focus { border-color: var(--auriu); }
+    .meniu-rezultate { font-size: 13px; color: var(--gri); margin-top: 0.8rem; }
+    .no-results {
+      text-align: center; padding: 3rem; color: var(--gri);
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      grid-column: 1 / -1;
+    }
+
     /* Skeleton */
     .skeleton {
       background: linear-gradient(90deg, var(--crem-dark) 25%, var(--crem) 50%, var(--crem-dark) 75%);
@@ -206,28 +339,160 @@
       animation: shimmer 1.5s infinite;
       border-radius: 6px; height: 16px; margin-bottom: 8px;
     }
+
+
+/* Containerul principal fixat */
+.notification-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Cercul permanent cu clopoțel */
+.notification-button {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #2c2c2c;
+  border: 2px solid #c8922a; /* Culoarea aurie a restaurantului */
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.notification-button:hover {
+  transform: scale(1.05);
+}
+
+.bell-icon {
+  font-size: 22px;
+}
+
+/* Bulina roșie pentru notificări necitite */
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #ff4d4d;
+  border-radius: 50%;
+  border: 2px solid #2c2c2c;
+}
+
+/* Meniul cu lista de notificări */
+.notification-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 320px;
+  max-height: 400px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  border: 1px solid #e0e0e0;
+  display: none; /* Ascuns implicit */
+  flex-direction: column;
+  overflow: hidden;
+  animation: popupFade 0.25s ease-out;
+}
+
+.notification-menu.show {
+  display: flex;
+}
+
+@keyframes popupFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header-ul meniului */
+.notification-header {
+  padding: 12px 16px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #2c2c2c;
+}
+
+.clear-all-btn {
+  background: none;
+  border: none;
+  color: #c8922a;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Lista de mesaje */
+.notification-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.4;
+  position: relative;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.no-notifications {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin: 0;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     @media (max-width: 768px) {
       .despre-layout { grid-template-columns: 1fr; }
       .despre-img-grid { display: none; }
       .valori-grid { grid-template-columns: 1fr; }
+
     }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">Flavour 🏠︎ House</a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Logo Flavour House" class="logo-img">
+    Flavour <span>House</span>
+  </a>
   <div class="nav-links">
     <a href="#meniu">Meniu</a>
     <a href="#despre">Despre</a>
-    <a href="rezervare.html">Rezervări</a>
+    <a href="rezervarile-mele.html">Rezervările mele</a>
     <a href="login.html" class="btn-nav" id="btn-auth">Autentificare</a>
   </div>
 </nav>
 
-<!-- Hero -->
 <section class="hero">
   <div class="hero-content fade-in">
     <p class="hero-subtitle">Restaurant & Bistro · Chișinău</p>
@@ -244,7 +509,6 @@
   </div>
 </section>
 
-<!-- Info -->
 <section>
   <div class="container">
     <div class="info-grid">
@@ -266,18 +530,37 @@
       <div class="info-box">
         <div class="info-icon">🍽️</div>
         <div class="info-titlu">Capacitate</div>
-        <div class="info-text">6 mese disponibile<br>Sală privată pentru evenimente</div>
+        <div class="info-text">6 mese disposable<br>Sală privată pentru evenimente</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Meniu -->
 <section id="meniu" style="background: var(--crem-dark);">
   <div class="container">
     <p class="section-label">Gastronomie</p>
     <h2 class="section-title">Meniul nostru</h2>
     <p class="section-desc">Preparate atent selectate, ingrediente proaspete și rețete cu suflet.</p>
+
+    <div class="meniu-controls">
+      <div class="meniu-search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="input-cautare" placeholder="Caută un preparat..." oninput="filtreazaMeniu()">
+      </div>
+      <select class="sort-select" id="sort-select" onchange="filtreazaMeniu()">
+        <option value="">Sortare implicită</option>
+        <option value="pret-asc">Preț: mic → mare</option>
+        <option value="pret-desc">Preț: mare → mic</option>
+        <option value="nume-asc">Nume: A → Z</option>
+      </select>
+    </div>
+
+    <div class="filtru-categorii" id="filtru-categorii">
+      <button class="filtru-btn activ" onclick="setCategorie('', this)">Toate</button>
+    </div>
+
+    <div class="meniu-rezultate" id="meniu-rezultate"></div>
+
     <div class="meniu-grid" id="meniu-grid">
       <div class="preparat-card"><div class="skeleton" style="width:100%;height:180px;border-radius:0"></div><div style="padding:1.2rem"><div class="skeleton" style="width:60%;height:12px"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:100%;height:12px"></div></div></div>
       <div class="preparat-card"><div class="skeleton" style="width:100%;height:180px;border-radius:0"></div><div style="padding:1.2rem"><div class="skeleton" style="width:60%;height:12px"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:100%;height:12px"></div></div></div>
@@ -289,11 +572,9 @@
   </div>
 </section>
 
-<!-- DESPRE -->
 <section id="despre">
   <div class="container">
 
-    <!-- Povestea restaurantului -->
     <div class="despre-layout">
       <div class="despre-img-grid">
         <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Interiorul restaurantului">
@@ -325,7 +606,6 @@
       </div>
     </div>
 
-    <!-- Valorile noastre -->
     <div style="margin-top:5rem">
       <p class="section-label">Ce ne definește</p>
       <h2 class="section-title">Valorile noastre</h2>
@@ -364,7 +644,6 @@
   </div>
 </section>
 
-<!-- CTA -->
 <section style="padding-top:0">
   <div class="container">
     <div class="cta-section">
@@ -384,49 +663,322 @@ const token = localStorage.getItem('token');
 const utilizator = JSON.parse(localStorage.getItem('utilizator') || 'null');
 const btnAuth = document.getElementById('btn-auth');
 
+// Actualizat: Modifică textul în "Profil" și adresa URL către "contul-meu.html"
 if (token && utilizator) {
-  btnAuth.textContent = utilizator.rol === 'admin' ? 'Admin Panel' : 'Contul meu';
-  btnAuth.href = utilizator.rol === 'admin' ? 'admin/dashboard.html' : 'rezervarile-mele.html';
+  btnAuth.textContent = utilizator.rol === 'admin' ? 'Admin Panel' : 'Profil';
+  btnAuth.href = utilizator.rol === 'admin' ? 'admin/dashboard.html' : 'contul-meu.html';
 }
 
+// ── Date globale ──────────────────────────────────────────────
+let toatePreparatele = [];
+let categorieActiva  = '';
+
+// ── Incarcare meniu ───────────────────────────────────────────
 async function incarcaMeniu() {
   try {
     const res  = await fetch('/api/meniu');
     const date = await res.json();
-    const grid = document.getElementById('meniu-grid');
+    toatePreparatele = date;
 
-    if (!date.length) {
-      grid.innerHTML = '<p style="color:var(--gri)">Meniul nu este disponibil momentan.</p>';
-      return;
-    }
-
-    grid.innerHTML = date .map(p => `
-      <div class="preparat-card fade-in">
-        <img
-          src="${p.imagine || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'}"
-          alt="${p.denumire}"
-          class="preparat-img"
-          onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'"
-        >
-        <div class="preparat-body">
-          <div class="preparat-categorie">${p.categorie}</div>
-          <div class="preparat-nume">${p.denumire}</div>
-          <div class="preparat-desc">${p.descriere || ''}</div>
-          <div class="preparat-footer">
-            <span class="preparat-pret">${parseFloat(p.pret).toFixed(2)} MDL</span>
-            <div class="preparat-rating">
-              <span class="stea-mica">★</span> ${p.rating || '5.0'}
-            </div>
-          </div>
-        </div>
-      </div>
+    // Generare butoane categorii unice
+    const categorii = ['Toate', ...new Set(date.map(p => p.categorie))];
+    const filtreCont = document.getElementById('filtru-categorii');
+    filtreCont.innerHTML = categorii.map((cat, i) => `
+      <button class="filtru-btn ${i === 0 ? 'activ' : ''}"
+              onclick="setCategorie('${i === 0 ? '' : cat}', this)">
+        ${cat}
+      </button>
     `).join('');
+
+    afiseazaPreparate(date);
   } catch (e) {
     document.getElementById('meniu-grid').innerHTML = '<p style="color:var(--gri)">Eroare la încărcarea meniului.</p>';
   }
 }
 
+// ── Setare categorie activa ───────────────────────────────────
+function setCategorie(cat, btn) {
+  categorieActiva = cat;
+  document.querySelectorAll('.filtru-btn').forEach(b => b.classList.remove('activ'));
+  btn.classList.add('activ');
+  filtreazaMeniu();
+}
+
+
+// ── Filtrare + cautare + sortare ─────────────────────────────
+function filtreazaMeniu() {
+  const cautare = document.getElementById('input-cautare').value.toLowerCase().trim();
+  const sort    = document.getElementById('sort-select').value;
+
+  let rezultate = toatePreparatele.filter(p => {
+    const potrivireNume = p.denumire.toLowerCase().includes(cautare);
+    const potrivireDesc = (p.descriere || '').toLowerCase().includes(cautare);
+    const potrivireCategorie = categorieActiva === '' || p.categorie === categorieActiva;
+    return (potrivireNume || potrivireDesc) && potrivireCategorie;
+  });
+
+  // Sortare
+  if (sort === 'pret-asc')  rezultate.sort((a, b) => a.pret - b.pret);
+  if (sort === 'pret-desc') rezultate.sort((a, b) => b.pret - a.pret);
+  if (sort === 'nume-asc')  rezultate.sort((a, b) => a.denumire.localeCompare(b.denumire));
+
+  // Mesaj rezultate
+  const msgEl = document.getElementById('meniu-rezultate');
+  if (cautare || categorieActiva) {
+    msgEl.textContent = `${rezultate.length} preparat${rezultate.length !== 1 ? 'e' : ''} găsit${rezultate.length !== 1 ? 'e' : ''}`;
+  } else {
+    msgEl.textContent = '';
+  }
+
+  afiseazaPreparate(rezultate);
+}
+
+// ── Afisare carduri cu buton Recenzii ────────────────────────
+function afiseazaPreparate(lista) {
+  const grid = document.getElementById('meniu-grid');
+
+  if (!lista.length) {
+    grid.innerHTML = '<div class="no-results">Nu am găsit preparate după criteriile selectate.</div>';
+    return;
+  }
+
+  grid.innerHTML = lista.map(p => `
+    <div class="preparat-card fade-in">
+      <img
+        src="${p.imagine || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'}"
+        alt="${p.denumire}"
+        class="preparat-img"
+        onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80'"
+      >
+      <div class="preparat-body">
+        <div class="preparat-categorie">${p.categorie}</div>
+        <div class="preparat-nume">${p.denumire}</div>
+        <div class="preparat-desc">${p.descriere || ''}</div>
+        <div class="preparat-footer">
+          <span class="preparat-pret">${parseFloat(p.pret).toFixed(2)} MDL</span>
+          <div class="preparat-rating">
+            <span class="stea-mica">★</span>
+            <span id="rating-${p.id}">—</span>
+          </div>
+        </div>
+        <button class="btn-recenzii" onclick="deschideRecenzii(${p.id}, '${p.denumire.replace(/'/g, "\\'")}')">
+          💬 Recenzii <span id="nr-recenzii-${p.id}" class="recenzii-count"></span>
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  // Incarcam numarul de recenzii si media pentru fiecare preparat
+  lista.forEach(p => incarcaRatingRapid(p.id));
+}
+
+// Incarcare rapida rating + numar recenzii pe card
+async function incarcaRatingRapid(preparatId) {
+  try {
+    const res  = await fetch(`/api/recenzii/${preparatId}`);
+    const date = await res.json();
+    const nrEl = document.getElementById(`nr-recenzii-${preparatId}`);
+    const ratingEl = document.getElementById(`rating-${preparatId}`);
+    if (!nrEl || !ratingEl) return;
+    if (!date.length) {
+      nrEl.textContent = '';
+      ratingEl.textContent = '—';
+      return;
+    }
+    const medie = (date.reduce((s, r) => s + r.calificativ, 0) / date.length).toFixed(1);
+    nrEl.textContent = `(${date.length})`;
+    ratingEl.textContent = medie;
+  } catch(e) {}
+}
+
+// ── Modal recenzii ────────────────────────────────────────────
+async function deschideRecenzii(preparatId, denumire) {
+  document.getElementById('modal-titlu').textContent = denumire;
+  document.getElementById('modal-overlay').classList.add('show');
+  document.getElementById('modal-body').innerHTML = '<p style="color:var(--gri);font-size:14px;text-align:center;padding:2rem">Se încarcă...</p>';
+
+  try {
+    const res  = await fetch(`/api/recenzii/${preparatId}`);
+    const date = await res.json();
+    const body = document.getElementById('modal-body');
+
+    if (!date.length) {
+      body.innerHTML = '<p style="color:var(--gri);font-size:14px;text-align:center;padding:2rem">Nicio recenzie încă pentru acest preparat.</p>';
+      return;
+    }
+
+    const medie = (date.reduce((s, r) => s + r.calificativ, 0) / date.length).toFixed(1);
+
+    body.innerHTML = `
+      <div class="modal-medie">
+        <span class="modal-medie-nr">${medie}</span>
+        <div>
+          <div style="color:var(--auriu);font-size:1.2rem">${steluteAfisate(Math.round(medie))}</div>
+          <div style="font-size:12px;color:var(--gri)">${date.length} recenz${date.length === 1 ? 'ie' : 'ii'}</div>
+        </div>
+      </div>
+      <div class="modal-recenzii-lista">
+        ${date.map(r => `
+          <div class="modal-recenzie-item">
+            <div class="modal-recenzie-avatar">${r.nume_utilizator[0].toUpperCase()}</div>
+            <div class="modal-recenzie-cont">
+              <div class="modal-recenzie-header">
+                <strong>${r.nume_utilizator}</strong>
+                <span class="modal-stele">${steluteAfisate(r.calificativ)}</span>
+                <span style="font-size:11px;color:var(--gri);margin-left:auto">${new Date(r.creat_la).toLocaleDateString('ro-RO')}</span>
+              </div>
+              ${r.comentariu ? `<div class="modal-recenzie-text">${r.comentariu}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch(e) {
+    document.getElementById('modal-body').innerHTML = '<p style="color:var(--rosu)">Eroare la încărcare.</p>';
+  }
+}
+
+function steluteAfisate(nr) {
+  return '★'.repeat(nr) + '☆'.repeat(5 - nr);
+}
+
+function inchideModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+const tokenNotificari = localStorage.getItem('token');
+let stareaRezervarilorAnterioare = {};
+let notificariAfisate = []; 
+
+// Afișează/Ascunde meniul la click pe cerc
+function toggleMeniuNotificari() {
+  const menu = document.getElementById('notification-menu');
+  menu.classList.toggle('show');
+  
+  if (menu.classList.contains('show')) {
+    document.getElementById('notification-badge').style.display = 'none';
+  }
+}
+
+function adaugaNotificareInLista(mesaj) {
+  notificariAfisate.unshift(mesaj); 
+  actualizeazaInterfataNotificari();
+}
+
+function actualizeazaInterfataNotificari() {
+  const listContainer = document.getElementById('notification-list');
+  const badge = document.getElementById('notification-badge');
+  const menu = document.getElementById('notification-menu');
+
+  if (notificariAfisate.length === 0) {
+    listContainer.innerHTML = '<p class="no-notifications">Nu ai notificări noi</p>';
+    badge.style.display = 'none';
+    return;
+  }
+
+  // Generăm elementele HTML pentru fiecare mesaj
+  listContainer.innerHTML = notificariAfisate
+    .map(msg => `<div class="notification-item">🔔 ${msg}</div>`)
+    .join('');
+
+  // Dacă meniul este închis, aprindem bulina roșie pentru mesaje noi
+  if (!menu.classList.contains('show')) {
+    badge.style.display = 'block';
+  }
+}
+
+function stergeToateNotificarile() {
+  notificariAfisate = [];
+  actualizeazaInterfataNotificari();
+}
+
+// Interogarea serverului (Polling)
+async function verificaSchimbariStatus() {
+  if (!tokenNotificari) return;
+
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', {
+      headers: { 'Authorization': `Bearer ${tokenNotificari}` }
+    });
+    if (!res.ok) return;
+    
+    const rezervari = await res.json();
+    let modificariNoi = false;
+    
+    rezervari.forEach(r => {
+      const statusVechi = stareaRezervarilorAnterioare[r.id];
+      
+      if (statusVechi && statusVechi !== r.status) {
+        let textStatus = r.status === 'confirmata' ? 'confirmată ✔️' : 'anulată ❌';
+        if (r.status === 'in_asteptare') textStatus = 'pusă în așteptare ⏳';
+        
+        const mesaj = `Rezervarea pentru masa ${r.numar_masa} din data ${r.data.split('T')[0]} este acum ${textStatus}.`;
+        
+        notificariAfisate.unshift(mesaj);
+        modificariNoi = true;
+      }
+      
+      stareaRezervarilorAnterioare[r.id] = r.status;
+    });
+
+    if (modificariNoi) {
+      actualizeazaInterfataNotificari();
+    }
+  } catch (err) {
+    console.error('Eroare notificare:', err);
+  }
+}
+
+async function pornesteSistemNotificari() {
+  if (!tokenNotificari) return;
+
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', {
+      headers: { 'Authorization': `Bearer ${tokenNotificari}` }
+    });
+    if (res.ok) {
+      const rezervari = await res.json();
+      rezervari.forEach(r => {
+        stareaRezervarilorAnterioare[r.id] = r.status;
+      });
+    }
+  } catch(e){}
+
+  // Verificare la fiecare 10 secunde
+  setInterval(verificaSchimbariStatus, 10000);
+}
+
+// Executăm funcția la pornire
+pornesteSistemNotificari();
+
 incarcaMeniu();
 </script>
+<div class="notification-widget">
+  <button class="notification-button" onclick="toggleMeniuNotificari()">
+    <span class="bell-icon">🔔</span>
+    <span id="notification-badge" class="notification-badge" style="display: none;"></span>
+  </button>
+
+  <div id="notification-menu" class="notification-menu">
+    <div class="notification-header">
+      <h3>Notificări</h3>
+      <button class="clear-all-btn" onclick="stergeToateNotificarile()">Șterge tot</button>
+    </div>
+    <div id="notification-list" class="notification-list">
+      <p class="no-notifications">Nu ai notificări noi</p>
+    </div>
+  </div>
+</div>
+<!-- Modal Recenzii -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)inchideModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-titlu">Recenzii</h3>
+      <button class="modal-close" onclick="inchideModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 </body>
 </html>

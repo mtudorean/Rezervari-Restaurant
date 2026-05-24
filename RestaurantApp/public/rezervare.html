@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
   <title>Rezervare — Flavour House</title>
+  
   <link rel="stylesheet" href="style.css">
   <style>
     .page-header {
@@ -32,12 +34,12 @@
     .masa-btn:hover:not(.ocupata) { border-color: var(--auriu); background: rgba(200,146,42,0.06); }
     .masa-btn.selectata { border-color: var(--auriu); background: rgba(200,146,42,0.1); }
     .masa-btn.ocupata { opacity: 0.4; cursor: not-allowed; background: var(--crem-dark); }
-    .masa-nr { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--maro); }
+    .masa-nr { font-family: 'Times New Roman', serif; font-size: 1.3rem; font-weight: 600; color: var(--maro); }
     .masa-cap { font-size: 11px; color: var(--gri); }
     .masa-loc { font-size: 11px; color: var(--auriu); font-weight: 500; }
 
     .info-rezervare { background: var(--alb); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow); position: sticky; top: 80px; }
-    .info-rezervare h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--maro); margin-bottom: 1.2rem; }
+    .info-rezervare h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--maro); margin-bottom: 1.2rem; }
     .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--crem-dark); font-size: 14px; }
     .info-row:last-of-type { border-bottom: none; }
     .info-row span:first-child { color: var(--gri); }
@@ -45,6 +47,31 @@
     .info-row span.gol { color: var(--gri-light); font-style: italic; font-weight: 400; }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .nav-logo {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px;
+    }
+
+    .logo-img {
+      height: 55px;
+      width: auto;
+      object-fit: contain;
+    }
+    .notification-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'DM Sans', sans-serif; }
+.notification-button { width: 55px; height: 55px; border-radius: 50%; background: #2c2c2c; border: 2px solid #c8922a; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.2s ease; }
+.notification-badge { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; background: #ff4d4d; border-radius: 50%; border: 2px solid #2c2c2c; }
+.notification-menu { position: absolute; bottom: 70px; right: 0; width: 320px; max-height: 400px; background: #ffffff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); border: 1px solid #e0e0e0; display: none; flex-direction: column; overflow: hidden; animation: popupFade 0.25s ease-out; }
+.notification-menu.show { display: flex; }
+.notification-header { padding: 12px 16px; background: #f9f9f9; border-bottom: 1px solid #eeeeee; display: flex; justify-content: space-between; align-items: center; }
+.notification-header h3 { margin: 0; font-size: 15px; color: #2c2c2c; }
+.clear-all-btn { background: none; border: none; color: #c8922a; font-size: 12px; cursor: pointer; font-weight: 500; }
+.notification-list { overflow-y: auto; flex: 1; }
+.notification-item { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; }
+.no-notifications { padding: 20px; text-align: center; color: #999; font-size: 13px; margin: 0; }
+@keyframes popupFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
     @media (max-width: 768px) {
       .rezervare-layout { grid-template-columns: 1fr; }
       .info-rezervare { position: static; }
@@ -55,12 +82,13 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">Flavour <span>House</span></a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Logo Flavour House" class="logo-img">
+    Flavour <span>House</span>
+  </a>
   <div class="nav-links">
     <a href="index.html">Acasă</a>
-    <a href="index.html#meniu">Meniu</a>
     <a href="rezervarile-mele.html" id="link-rezervarile-mele" style="display:none">Rezervările mele</a>
-    <a href="#" class="btn-nav" id="btn-auth" onclick="logout(event)">Ieși din cont</a>
   </div>
 </nav>
 
@@ -70,7 +98,6 @@
 </div>
 
 <div class="rezervare-layout">
-  <!-- Formular -->
   <div>
     <div class="form-card">
       <h2>📅 Data și ora</h2>
@@ -99,7 +126,7 @@
     <div class="form-card" style="margin-top:1.5rem">
       <h2>🪑 Selectează masa</h2>
       <div id="mese-container">
-        <p style="color:var(--gri);font-size:14px">Selectează data și ora pentru a vedea mesele disponibile.</p>
+        <p style="color:var(--gri);font-size:14px">Selectează data și ora pentru a vedea mesele disposable.</p>
       </div>
     </div>
 
@@ -117,7 +144,6 @@
     </button>
   </div>
 
-  <!-- Rezumat -->
   <div class="info-rezervare">
     <h3>Rezumatul rezervării</h3>
     <div class="info-row"><span>Data</span><span id="r-data" class="gol">Neselectată</span></div>
@@ -134,18 +160,15 @@
 <footer><p>© 2026 <span>Flavour House </span>Restaurant</p></footer>
 
 <script>
-// Verificam autentificarea
 const token = localStorage.getItem('token');
 const utilizator = JSON.parse(localStorage.getItem('utilizator') || 'null');
 
 if (!token) { window.location.href = 'login.html'; }
 
 if (utilizator) {
-  document.getElementById('btn-auth').textContent = `Ieși (${utilizator.nume.split(' ')[0]})`;
   document.getElementById('link-rezervarile-mele').style.display = 'inline';
 }
 
-// Data minima = azi
 document.getElementById('data').min = new Date().toISOString().split('T')[0];
 
 let masaSelectata = null;
@@ -255,6 +278,79 @@ async function trimiteRezervare() {
     alertEl.textContent = 'Eroare de conexiune.';
   }
 }
+let notificariAfisate = [];
+let stareaRezervarilorAnterioare = {};
+
+function toggleMeniuNotificari() {
+  const menu = document.getElementById('notification-menu');
+  menu.classList.toggle('show');
+  if (menu.classList.contains('show')) document.getElementById('notification-badge').style.display = 'none';
+}
+
+function actualizeazaInterfataNotificari() {
+  const listContainer = document.getElementById('notification-list');
+  const badge = document.getElementById('notification-badge');
+  const menu = document.getElementById('notification-menu');
+
+  if (notificariAfisate.length === 0) {
+    listContainer.innerHTML = '<p class="no-notifications">Nu ai notificări noi</p>';
+    badge.style.display = 'none';
+    return;
+  }
+  listContainer.innerHTML = notificariAfisate.map(msg => `<div class="notification-item">🔔 ${msg}</div>`).join('');
+  if (!menu.classList.contains('show')) badge.style.display = 'block';
+}
+
+function stergeToateNotificarile() { notificariAfisate = []; actualizeazaInterfataNotificari(); }
+
+async function verificaSchimbariStatus() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) return;
+    const rezervari = await res.json();
+    let modificariNoi = false;
+    rezervari.forEach(r => {
+      const statusVechi = stareaRezervarilorAnterioare[r.id];
+      if (statusVechi && statusVechi !== r.status) {
+        let textStatus = r.status === 'confirmata' ? 'confirmată ✔️' : 'anulată ❌';
+        notificariAfisate.unshift(`Rezervarea pentru masa ${r.numar_masa} din data de ${r.data.split('T')[0]} este acum ${textStatus}.`);
+        modificariNoi = true;
+      }
+      stareaRezervarilorAnterioare[r.id] = r.status;
+    });
+    if (modificariNoi) actualizeazaInterfataNotificari();
+  } catch (err) { console.error(err); }
+}
+
+async function pornesteSistemNotificari() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (res.ok) {
+      const rezervari = await res.json();
+      rezervari.forEach(r => stareaRezervarilorAnterioare[r.id] = r.status);
+    }
+  } catch(e){}
+  setInterval(verificaSchimbariStatus, 10000);
+}
+
+pornesteSistemNotificari();
 </script>
+<div class="notification-widget">
+  <button class="notification-button" onclick="toggleMeniuNotificari()">
+    <span class="bell-icon">🔔</span>
+    <span id="notification-badge" class="notification-badge" style="display: none;"></span>
+  </button>
+  <div id="notification-menu" class="notification-menu">
+    <div class="notification-header">
+      <h3>Notificări</h3>
+      <button class="clear-all-btn" onclick="stergeToateNotificarile()">Șterge tot</button>
+    </div>
+    <div id="notification-list" class="notification-list">
+      <p class="no-notifications">Nu ai notificări noi</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>

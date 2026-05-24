@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
+  <title>Contul meu — Flavour House</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-header {
+      background: linear-gradient(160deg, var(--maro) 0%, var(--maro-med) 100%);
+      padding: 5rem 1.5rem 3rem; text-align: center;
+    }
+    .page-header p { font-size: 11px; letter-spacing: 0.2em; color: var(--auriu); text-transform: uppercase; margin-bottom: 0.8rem; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--crem); }
+
+    .content { max-width: 960px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+    .profil-grid {
+      display: grid; grid-template-columns: 300px 1fr;
+      gap: 2rem; align-items: start;
+    }
+
+    /* Card profil stanga */
+    .profil-card {
+      background: var(--alb); border-radius: var(--radius-lg);
+      padding: 2rem; box-shadow: var(--shadow);
+      border: 1px solid rgba(212,206,198,0.5);
+      text-align: center; position: sticky; top: 80px;
+    }
+    .profil-avatar {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--maro) 0%, var(--maro-med) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif; font-size: 2rem;
+      color: var(--auriu); margin: 0 auto 1.2rem; font-weight: 700;
+    }
+    .profil-nume {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--maro); margin-bottom: 4px;
+    }
+    .profil-email { font-size: 15px; color: var(--gri); margin-bottom: 1.3rem; }
+    .profil-badge {
+      display: inline-block; font-size: 15px; font-weight: 500;
+      padding: 4px 12px; border-radius: 99px;
+      background: rgba(200,146,42,0.12); color: var(--auriu);
+      margin-bottom: 1.5rem;
+    }
+    .profil-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem; margin-bottom: 1.5rem;
+      padding: 1rem 0; border-top: 1px solid var(--crem-dark);
+      border-bottom: 1px solid var(--crem-dark);
+    }
+    .profil-stat-nr {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700; color: var(--auriu); line-height: 1;
+    }
+    .profil-stat-label { font-size: 13px; color: var(--gri); margin-top: 3px; }
+    .profil-membru { font-size: 12px; color: var(--gri); }
+
+    /* Dreapta — sectiuni */
+    .sectiuni { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .sectiune-card {
+      background: var(--alb); border-radius: var(--radius-lg);
+      padding: 1.8rem; box-shadow: var(--shadow);
+      border: 1px solid rgba(212,206,198,0.5);
+    }
+    .sectiune-titlu {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.4rem; color: var(--maro);
+      font-weight: bold;
+      margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Rezervari recente */
+    .rez-mini {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--crem-dark);
+      font-size: 14px;
+    }
+    .rez-mini:last-child { border-bottom: none; }
+    .rez-mini-info { color: var(--maro); font-size: 1.1rem; }
+    .rez-mini-data { font-size: 0.9rem; color: var(--gri); }
+
+    /* Schimbare parola */
+    .pass-form { display: flex; flex-direction: column; gap: 0.8rem; }
+
+    /* Info boxes */
+    .info-boxes {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;
+    }
+    .info-tip {
+      background: var(--crem-dark); border-radius: var(--radius);
+      padding: 1rem 1.2rem; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .info-tip-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .info-tip-titlu { font-size: 13px; font-weight: 600; color: var(--maro); margin-bottom: 3px; }
+    .info-tip-text { font-size: 12px; color: var(--gri); line-height: 1.5; }
+
+    .nav-logo {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px;
+    }
+
+    .logo-img {
+      height: 55px;
+      width: auto;
+      object-fit: contain;
+    }
+.notification-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'DM Sans', sans-serif; }
+.notification-button { width: 55px; height: 55px; border-radius: 50%; background: #2c2c2c; border: 2px solid #c8922a; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.2s ease; }
+.notification-badge { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; background: #ff4d4d; border-radius: 50%; border: 2px solid #2c2c2c; }
+.notification-menu { position: absolute; bottom: 70px; right: 0; width: 320px; max-height: 400px; background: #ffffff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); border: 1px solid #e0e0e0; display: none; flex-direction: column; overflow: hidden; animation: popupFade 0.25s ease-out; }
+.notification-menu.show { display: flex; }
+.notification-header { padding: 12px 16px; background: #f9f9f9; border-bottom: 1px solid #eeeeee; display: flex; justify-content: space-between; align-items: center; }
+.notification-header h3 { margin: 0; font-size: 15px; color: #2c2c2c; }
+.clear-all-btn { background: none; border: none; color: #c8922a; font-size: 12px; cursor: pointer; font-weight: 500; }
+.notification-list { overflow-y: auto; flex: 1; }
+.notification-item { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; }
+.no-notifications { padding: 20px; text-align: center; color: #999; font-size: 13px; margin: 0; }
+@keyframes popupFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 768px) {
+      .profil-grid { grid-template-columns: 1fr; }
+      .profil-card { position: static; }
+      .info-boxes { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Logo Flavour House" class="logo-img">
+    Flavour <span>House</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" data-i18n="nav_home">Acasă</a>
+    <a href="#" class="btn-nav" onclick="logout(event)" data-i18n="nav_logout">Ieși din cont</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <p data-i18n="my_account_label">Profilul meu</p>
+  <h1 data-i18n="my_account_title">Contul meu</h1>
+</div>
+
+<div class="content">
+  <div id="alert" class="alert"></div>
+
+  <div class="profil-grid">
+
+    <div class="profil-card">
+      <div class="profil-avatar" id="avatar-initiale">?</div>
+      <div class="profil-nume" id="profil-nume">—</div>
+      <div class="profil-email" id="profil-email">—</div>
+      <div class="profil-badge">👤 Client</div>
+
+      <div class="profil-stats">
+        <div>
+          <div class="profil-stat-nr" id="stat-total">0</div>
+          <div class="profil-stat-label" data-i18n="my_account_total_res">Total</div>
+        </div>
+        <div>
+          <div class="profil-stat-nr" id="stat-confirmate" style="color:var(--verde)">0</div>
+          <div class="profil-stat-label" data-i18n="my_account_confirmed">Confirmate</div>
+        </div>
+        <div>
+          <div class="profil-stat-nr" id="stat-asteptare" style="color:var(--auriu)">0</div>
+          <div class="profil-stat-label" data-i18n="my_account_pending">Așteptare</div>
+        </div>
+      </div>
+
+      <div class="profil-membru" id="profil-membru"></div>
+      <div style="margin-top:1.2rem">
+        <a href="rezervare.html" class="btn btn-primary btn-full" style="margin-bottom:8px" data-i18n="hero_btn_reserve">Rezervă o masă</a>
+        <a href="rezervarile-mele.html" class="btn btn-outline btn-full" data-i18n="nav_my_reservations">Rezervările mele</a>
+      </div>
+    </div>
+
+    <div class="sectiuni">
+
+      <div class="sectiune-card">
+        <div class="sectiune-titlu">🗓️ <span data-i18n="my_account_recent">Rezervări recente</span></div>
+        <div id="rezervari-recente">
+          <p style="color:var(--gri);font-size:14px">Se încarcă...</p>
+        </div>
+        <div style="margin-top:1rem">
+          <a href="rezervarile-mele.html" class="btn btn-outline btn-sm" data-i18n="nav_my_reservations">Vezi toate</a>
+        </div>
+      </div>
+
+      <div class="sectiune-card">
+        <div class="sectiune-titlu">💡 Tips & Info</div>
+        <div class="info-boxes">
+          <div class="info-tip">
+            <div class="info-tip-icon">⏰</div>
+            <div>
+              <div class="info-tip-titlu">Confirmare rapidă</div>
+              <div class="info-tip-text">Rezervările tale sunt confirmate în cel mult 2 ore de la trimitere.</div>
+            </div>
+          </div>
+          <div class="info-tip">
+            <div class="info-tip-icon">⭐</div>
+            <div>
+              <div class="info-tip-titlu">Lasă o recenzie</div>
+              <div class="info-tip-text">După o vizită confirmată poți lăsa recenzii pentru preparatele consumate.</div>
+            </div>
+          </div>
+          <div class="info-tip">
+            <div class="info-tip-icon">📞</div>
+            <div>
+              <div class="info-tip-titlu">Ai nevoie de ajutor?</div>
+              <div class="info-tip-text">Contactează-ne la +373 22 123 456 sau rezervari@flavourhouse.md</div>
+            </div>
+          </div>
+          <div class="info-tip">
+            <div class="info-tip-icon">🎂</div>
+            <div>
+              <div class="info-tip-titlu">Evenimente speciale</div>
+              <div class="info-tip-text">Adaugă în observații dacă sărbătorești ceva — pregătim o surpriză!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sectiune-card">
+        <div class="sectiune-titlu">🔐 <span data-i18n="my_account_change_pass">Schimbă parola</span></div>
+        <div class="pass-form">
+          <div class="form-group" style="margin-bottom:0">
+            <label data-i18n="my_account_current_pass">Parola actuală</label>
+            <input type="password" id="parola-actuala" placeholder="••••••••">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label data-i18n="my_account_new_pass">Parola nouă</label>
+            <input type="password" id="parola-noua" placeholder="Minim 6 caractere">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label data-i18n="my_account_confirm_pass">Confirmă parola nouă</label>
+            <input type="password" id="parola-confirmare" placeholder="Repetă parola nouă">
+          </div>
+          <button class="btn btn-dark" onclick="schimbaParola()" data-i18n="my_account_save">Salvează parola</button>
+          <div id="alert-parola" class="alert"></div>
+        </div>
+      </div>
+
+      <div class="sectiune-card" style="border-color:rgba(155,35,53,0.2)">
+        <div class="sectiune-titlu" style="color:var(--rosu)">⚠️ Danger Zone</div>
+        <p style="font-size:14px;color:var(--gri);margin-bottom:1rem">Acțiunile de mai jos sunt ireversibile. Procedează cu atenție.</p>
+        <button class="btn btn-danger btn-sm" onclick="stergeContConfirm()">Șterge contul</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer><p>© 2026 <span>Flavour House</span> Restaurant · Chișinău, Moldova</p></footer>
+
+<script>
+const token = localStorage.getItem('token');
+const utilizator = JSON.parse(localStorage.getItem('utilizator') || 'null');
+if (!token || !utilizator) window.location.href = 'login.html';
+
+function logout(e) {
+  e.preventDefault();
+  localStorage.removeItem('token');
+  localStorage.removeItem('utilizator');
+  window.location.href = 'login.html';
+}
+
+document.getElementById('profil-nume').textContent  = utilizator.nume;
+document.getElementById('profil-email').textContent = utilizator.email;
+document.getElementById('avatar-initiale').textContent = utilizator.nume
+  .split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+async function incarcaDate() {
+  try {
+    const res  = await fetch('/api/rezervari/ale-mele', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const date = await res.json();
+
+    document.getElementById('stat-total').textContent      = date.length;
+    document.getElementById('stat-confirmate').textContent = date.filter(r => r.status === 'confirmata').length;
+    document.getElementById('stat-asteptare').textContent  = date.filter(r => r.status === 'in_asteptare').length;
+
+    const recente = date.slice(0, 3);
+    const cont    = document.getElementById('rezervari-recente');
+
+    if (!recente.length) {
+      cont.innerHTML = `<p style="color:var(--gri);font-size:14px">Nu ai nicio rezervare încă.</p>`;
+      return;
+    }
+
+    cont.innerHTML = recente.map(r => `
+      <div class="rez-mini">
+        <div>
+          <div class="rez-mini-info">Masa ${r.numar_masa} — ${r.locatie}</div>
+          <div class="rez-mini-data">📅 ${new Date(r.data).toLocaleDateString('ro-RO', { day:'numeric', month:'long', year:'numeric' })} · 🕐 ${r.ora.slice(0,5)}</div>
+        </div>
+        <span class="badge badge-${r.status === 'confirmata' ? 'confirmata' : r.status === 'anulata' ? 'anulata' : 'asteptare'}">
+          ${r.status === 'confirmata' ? '✓ Confirmată' : r.status === 'anulata' ? '✗ Anulată' : '⏳ Așteptare'}
+        </span>
+      </div>
+    `).join('');
+
+  } catch (e) {
+    document.getElementById('rezervari-recente').innerHTML = '<p style="color:var(--rosu)">Eroare.</p>';
+  }
+}
+
+async function schimbaParola() {
+  const actuala     = document.getElementById('parola-actuala').value;
+  const noua        = document.getElementById('parola-noua').value;
+  const confirmare  = document.getElementById('parola-confirmare').value;
+  const alertEl     = document.getElementById('alert-parola');
+
+  alertEl.className = 'alert';
+
+  if (!actuala || !noua || !confirmare) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Completează toate câmpurile.';
+    return;
+  }
+  if (noua.length < 6) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Parola nouă trebuie să aibă cel puțin 6 caractere.';
+    return;
+  }
+  if (noua !== confirmare) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Parolele noi nu coincid.';
+    return;
+  }
+
+  try {
+    const res  = await fetch('/api/auth/schimba-parola', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ parola_actuala: actuala, parola_noua: noua })
+    });
+    const date = await res.json();
+
+    if (!res.ok) {
+      alertEl.className = 'alert alert-error show';
+      alertEl.textContent = date.mesaj;
+      return;
+    }
+
+    alertEl.className = 'alert alert-success show';
+    alertEl.textContent = '✅ Parola a fost schimbată cu succes!';
+    document.getElementById('parola-actuala').value   = '';
+    document.getElementById('parola-noua').value      = '';
+    document.getElementById('parola-confirmare').value = '';
+  } catch (e) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Eroare de conexiune.';
+  }
+}
+
+function stergeContConfirm() {
+  if (confirm('Ești sigur că vrei să ștergi contul? Toate rezervările tale vor fi anulate. Această acțiune este ireversibilă!')) {
+    alert('Funcționalitate în curs de implementare. Contactează-ne la rezervari@flavourhouse.md pentru ștergerea contului.');
+  }
+}
+let notificariAfisate = [];
+let stareaRezervarilorAnterioare = {};
+
+function toggleMeniuNotificari() {
+  const menu = document.getElementById('notification-menu');
+  menu.classList.toggle('show');
+  if (menu.classList.contains('show')) document.getElementById('notification-badge').style.display = 'none';
+}
+
+function actualizeazaInterfataNotificari() {
+  const listContainer = document.getElementById('notification-list');
+  const badge = document.getElementById('notification-badge');
+  const menu = document.getElementById('notification-menu');
+
+  if (notificariAfisate.length === 0) {
+    listContainer.innerHTML = '<p class="no-notifications">Nu ai notificări noi</p>';
+    badge.style.display = 'none';
+    return;
+  }
+  listContainer.innerHTML = notificariAfisate.map(msg => `<div class="notification-item">🔔 ${msg}</div>`).join('');
+  if (!menu.classList.contains('show')) badge.style.display = 'block';
+}
+
+function stergeToateNotificarile() { notificariAfisate = []; actualizeazaInterfataNotificari(); }
+
+async function verificaSchimbariStatus() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) return;
+    const rezervari = await res.json();
+    let modificariNoi = false;
+    rezervari.forEach(r => {
+      const statusVechi = stareaRezervarilorAnterioare[r.id];
+      if (statusVechi && statusVechi !== r.status) {
+        let textStatus = r.status === 'confirmata' ? 'confirmată ✔️' : 'anulată ❌';
+        notificariAfisate.unshift(`Rezervarea pentru masa ${r.numar_masa} din data de ${r.data.split('T')[0]} este acum ${textStatus}.`);
+        modificariNoi = true;
+      }
+      stareaRezervarilorAnterioare[r.id] = r.status;
+    });
+    if (modificariNoi) actualizeazaInterfataNotificari();
+  } catch (err) { console.error(err); }
+}
+
+async function pornesteSistemNotificari() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (res.ok) {
+      const rezervari = await res.json();
+      rezervari.forEach(r => stareaRezervarilorAnterioare[r.id] = r.status);
+    }
+  } catch(e){}
+  setInterval(verificaSchimbariStatus, 10000);
+}
+
+pornesteSistemNotificari();
+incarcaDate();
+applyTranslations(getLang());
+</script>
+<div class="notification-widget">
+  <button class="notification-button" onclick="toggleMeniuNotificari()">
+    <span class="bell-icon">🔔</span>
+    <span id="notification-badge" class="notification-badge" style="display: none;"></span>
+  </button>
+
+  <div id="notification-menu" class="notification-menu">
+    <div class="notification-header">
+      <h3>Notificări</h3>
+      <button class="clear-all-btn" onclick="stergeToateNotificarile()">Șterge tot</button>
+    </div>
+    <div id="notification-list" class="notification-list">
+      <p class="no-notifications">Nu ai notificări noi</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

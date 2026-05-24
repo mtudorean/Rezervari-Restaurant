@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
   <title>Rezervările mele — Flavour House</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    
     .page-header { background: linear-gradient(160deg, var(--maro) 0%, var(--maro-med) 100%); padding: 5rem 1.5rem 3rem; text-align: center; }
     .page-header p { font-size: 11px; letter-spacing: 0.2em; color: var(--auriu); text-transform: uppercase; margin-bottom: 0.8rem; }
     .page-header h1 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--crem); }
     .content { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; width: 100%; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .top-bar h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--maro); }
+    .top-bar h2 { font-family: 'Times New Roman', serif; font-size: 1.5rem; color: var(--maro); }
     .rezervare-card {
       background: var(--alb); border-radius: var(--radius-lg);
       padding: 1.5rem; border: 1px solid rgba(212,206,198,0.5);
@@ -21,23 +24,99 @@
     }
     .rezervare-card:hover { box-shadow: var(--shadow); }
     .rez-info { flex: 1; }
-    .rez-titlu { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--maro); margin-bottom: 0.5rem; }
+    .rez-titlu { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--maro); margin-bottom: 0.5rem; }
     .rez-detalii { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--gri); margin-bottom: 0.8rem; }
-    .rez-detalii span { display: flex; align-items: center; gap: 4px; }
+    .rez-detalii span { display: flex; align-items: center; gap: 6px; }
     .rez-obs { font-size: 13px; color: var(--gri); font-style: italic; }
     .rez-actiuni { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
     .gol-state { text-align: center; padding: 4rem 2rem; color: var(--gri); }
     .gol-state p { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1rem; }
+
+    /* Stiluri Logo */
+    .nav-logo {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px; /* Spațiu liber între imagine și text */
+    }
+
+    /* Controlul dimensiunii logo-ului */
+    .logo-img {
+      height: 55px; /* Înălțimea optimă pentru bara de navigare */
+      width: auto;  /* Păstrează proporțiile imaginii intacte */
+      object-fit: contain;
+    }
+
+    .notification-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; font-family: 'DM Sans', sans-serif; }
+.notification-button { width: 55px; height: 55px; border-radius: 50%; background: #2c2c2c; border: 2px solid #c8922a; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.2s ease; }
+.notification-badge { position: absolute; top: 2px; right: 2px; width: 12px; height: 12px; background: #ff4d4d; border-radius: 50%; border: 2px solid #2c2c2c; }
+.notification-menu { position: absolute; bottom: 70px; right: 0; width: 320px; max-height: 400px; background: #ffffff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); border: 1px solid #e0e0e0; display: none; flex-direction: column; overflow: hidden; animation: popupFade 0.25s ease-out; }
+.notification-menu.show { display: flex; }
+.notification-header { padding: 12px 16px; background: #f9f9f9; border-bottom: 1px solid #eeeeee; display: flex; justify-content: space-between; align-items: center; }
+.notification-header h3 { margin: 0; font-size: 15px; color: #2c2c2c; }
+.clear-all-btn { background: none; border: none; color: #c8922a; font-size: 12px; cursor: pointer; font-weight: 500; }
+.notification-list { overflow-y: auto; flex: 1; }
+.notification-item { padding: 12px 16px; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #444; }
+.no-notifications { padding: 20px; text-align: center; color: #999; font-size: 13px; margin: 0; }
+@keyframes popupFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Sectiune recenzie ── */
+    .recenzie-sectiune {
+      margin-top: 1rem; padding-top: 1rem;
+      border-top: 1px solid var(--crem-dark);
+    }
+    .recenzie-titlu {
+      font-size: 13px; font-weight: 600; color: var(--maro);
+      margin-bottom: 0.6rem;
+    }
+    .recenzie-info {
+      font-size: 12px; color: var(--gri);
+      padding: 8px 12px; background: var(--crem-dark);
+      border-radius: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .recenzie-info.success {
+      background: #D1FAE5; color: #065F46;
+    }
+    .stele-input {
+      display: flex; gap: 4px; margin-bottom: 8px;
+    }
+    .stea-select {
+      font-size: 24px; cursor: pointer; color: var(--gri-light);
+      transition: color 0.15s, transform 0.1s; user-select: none; line-height: 1;
+    }
+    .stea-select:hover, .stea-select.activa { color: var(--auriu); transform: scale(1.1); }
+    .nota-valoare {
+      font-size: 13px; color: var(--gri); margin-left: 4px;
+      align-self: center;
+    }
+    .recenzie-form-inner {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .recenzie-form-inner textarea {
+      width: 100%; padding: 8px 12px; font-size: 13px;
+      border: 1.5px solid var(--gri-light); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; resize: none;
+      outline: none; box-sizing: border-box; color: var(--maro);
+      transition: border-color 0.2s;
+    }
+    .recenzie-form-inner textarea:focus { border-color: var(--auriu); }
+    .recenzie-existenta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--maro);
+    }
+    .recenzie-stele-afisate { color: var(--auriu); font-size: 14px; }
+    .recenzie-comentariu { color: var(--gri); font-style: italic; font-size: 12px; margin-top: 2px; }
   </style>
 </head>
 <body class="sticky-footer-layout">
 
 <nav>
-  <a href="index.html" class="nav-logo">Flavour <span>House</span></a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Logo Flavour House" class="logo-img">
+    Flavour <span>House</span>
+  </a>
   <div class="nav-links">
     <a href="index.html">Acasă</a>
-    <a href="rezervare.html">Rezervare nouă</a>
-    <a href="#" class="btn-nav" onclick="logout(event)">Ieși din cont</a>
+    <a href="contul-meu.html" class="btn-nav">Profil</a>
   </div>
 </nav>
 
@@ -79,6 +158,80 @@ function formatData(dataStr) {
   return d.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+// ── Verificare daca data+ora rezervarii a trecut ──────────────
+function rezervareaATrecut(data, ora) {
+  const dataOraRezervare = new Date(`${data.split('T')[0]}T${ora}`);
+  return new Date() > dataOraRezervare;
+}
+
+// ── Nota selectata per rezervare ─────────────────────────────
+const noteSelectate = {};
+
+function selecteazaStea(rezervareId, val) {
+  noteSelectate[rezervareId] = val;
+  const stele = document.querySelectorAll(`#stele-rez-${rezervareId} .stea-select`);
+  stele.forEach(s => {
+    s.classList.toggle('activa', parseInt(s.dataset.val) <= val);
+  });
+  const notaEl = document.getElementById(`nota-val-${rezervareId}`);
+  if (notaEl) notaEl.textContent = `${val}.0 / 5.0`;
+}
+
+// ── Incarcare recenzie existenta ──────────────────────────────
+async function incarcaRecenzieRezervare(rezervareId, preparatId) {
+  // Nu avem preparat_id direct, recenzia e per preparat
+  // Afisam doar formularul general — clientul alege preparatul
+}
+
+// ── Trimite recenzie ──────────────────────────────────────────
+async function trimiteRecenzieRezervare(rezervareId) {
+  const nota       = noteSelectate[rezervareId];
+  const comentariu = document.getElementById(`comentariu-rez-${rezervareId}`).value.trim();
+  const preparatId = document.getElementById(`preparat-rez-${rezervareId}`)?.value;
+  const alertEl    = document.getElementById(`alert-rez-${rezervareId}`);
+
+  alertEl.className = 'alert'; alertEl.textContent = '';
+
+  if (!preparatId) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Alege un preparat din lista.';
+    return;
+  }
+  if (!nota) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Selectează o notă (stele).';
+    return;
+  }
+
+  try {
+    const res  = await fetch('/api/recenzii', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ preparat_id: preparatId, calificativ: nota, comentariu })
+    });
+    const date = await res.json();
+
+    if (!res.ok) {
+      alertEl.className = 'alert alert-error show';
+      alertEl.textContent = date.mesaj;
+      return;
+    }
+
+    // ✅ Formularul dispare automat, se afiseaza mesaj succes
+    const sectiune = document.getElementById(`recenzie-sectiune-${rezervareId}`);
+    sectiune.innerHTML = `
+      <div class="recenzie-sectiune">
+        <div class="recenzie-info success">
+          ✅ Recenzia ta a fost trimisă cu succes! Mulțumim pentru feedback.
+        </div>
+      </div>`;
+  } catch (e) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Eroare de conexiune.';
+  }
+}
+
+// ── Incarcare rezervari ───────────────────────────────────────
 async function incarcaRezervari() {
   const lista = document.getElementById('lista-rezervari');
   const titlu = document.getElementById('titlu-sectiune');
@@ -88,6 +241,10 @@ async function incarcaRezervari() {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const date = await res.json();
+
+    // Incarcam si meniul pentru selectia preparatului
+    const resMeniu = await fetch('/api/meniu');
+    const meniu    = await resMeniu.json();
 
     titlu.textContent = `${date.length} rezerv${date.length === 1 ? 'are' : 'ări'}`;
 
@@ -100,25 +257,85 @@ async function incarcaRezervari() {
       return;
     }
 
-    lista.innerHTML = date.map(r => `
-      <div class="rezervare-card fade-in" id="rez-${r.id}">
-        <div class="rez-info">
-          <div class="rez-titlu">Masa ${r.numar_masa} — ${r.locatie}</div>
-          <div class="rez-detalii">
-            <span>📅 ${formatData(r.data)}</span>
-            <span>🕐 ${r.ora.slice(0,5)}</span>
-            <span>👥 ${r.nr_persoane} pers.</span>
+    lista.innerHTML = date.map(r => {
+      const aTrecut   = rezervareaATrecut(r.data, r.ora);
+      const confirmata = r.status === 'confirmata';
+      const poateRecenza = confirmata && aTrecut;
+
+      // Sectiune recenzie
+      let recenzieHTML = '';
+      if (confirmata && !aTrecut) {
+        const dataRez = new Date(`${r.data.split('T')[0]}T${r.ora}`);
+        recenzieHTML = `
+          <div id="recenzie-sectiune-${r.id}">
+            <div class="recenzie-sectiune">
+              <div class="recenzie-info">
+                ⏳ Vei putea lăsa o recenzie după ${dataRez.toLocaleDateString('ro-RO', {day:'numeric',month:'long'})} ora ${r.ora.slice(0,5)}
+              </div>
+            </div>
+          </div>`;
+      } else if (poateRecenza) {
+        const optiuniMeniu = meniu.map(p =>
+          `<option value="${p.id}">${p.denumire} (${p.categorie})</option>`
+        ).join('');
+
+        recenzieHTML = `
+          <div id="recenzie-sectiune-${r.id}">
+            <div class="recenzie-sectiune">
+              <div class="recenzie-titlu">⭐ Lasă o recenzie</div>
+              <div id="form-recenzie-rez-${r.id}" class="recenzie-form-inner">
+                <select id="preparat-rez-${r.id}" style="padding:8px 12px;border:1.5px solid var(--gri-light);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--maro);outline:none;background:var(--alb)">
+                  <option value="">— Alege preparatul —</option>
+                  ${optiuniMeniu}
+                </select>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="stele-input" id="stele-rez-${r.id}">
+                    ${[1,2,3,4,5].map(n => `
+                      <span class="stea-select" onclick="selecteazaStea(${r.id}, ${n})" data-val="${n}">★</span>
+                    `).join('')}
+                  </div>
+                  <span class="nota-valoare" id="nota-val-${r.id}">— / 5.0</span>
+                </div>
+                <textarea id="comentariu-rez-${r.id}" rows="2" placeholder="Comentariul tău despre experiența la restaurant (opțional)..."></textarea>
+                <div id="alert-rez-${r.id}" class="alert"></div>
+                <button class="btn btn-primary btn-sm" onclick="trimiteRecenzieRezervare(${r.id})">
+                  Trimite recenzia
+                </button>
+              </div>
+            </div>
+          </div>`;
+      } else if (r.status === 'in_asteptare') {
+        recenzieHTML = `
+          <div id="recenzie-sectiune-${r.id}">
+            <div class="recenzie-sectiune">
+              <div class="recenzie-info">
+                🕐 Recenzia devine disponibilă după confirmarea rezervării și data vizitei.
+              </div>
+            </div>
+          </div>`;
+      }
+
+      return `
+        <div class="rezervare-card fade-in" id="rez-${r.id}">
+          <div class="rez-info">
+            <div class="rez-titlu">Masa ${r.numar_masa} — ${r.locatie}</div>
+            <div class="rez-detalii">
+              <span>📅 ${formatData(r.data)}</span>
+              <span>🕐 ${r.ora.slice(0,5)}</span>
+              <span>👥 ${r.nr_persoane} pers.</span>
+            </div>
+            ${r.observatii ? `<div class="rez-obs">📝 ${r.observatii}</div>` : ''}
+            ${recenzieHTML}
           </div>
-          ${r.observatii ? `<div class="rez-obs">📝 ${r.observatii}</div>` : ''}
-        </div>
-        <div class="rez-actiuni">
-          <span class="badge badge-${r.status === 'confirmata' ? 'confirmata' : r.status === 'anulata' ? 'anulata' : 'asteptare'}">
-            ${r.status === 'confirmata' ? '✓ Confirmată' : r.status === 'anulata' ? '✗ Anulată' : '⏳ În așteptare'}
-          </span>
-          ${r.status !== 'anulata' ? `<button class="btn btn-danger btn-sm" onclick="anuleaza(${r.id})">Anulează</button>` : ''}
-        </div>
-      </div>
-    `).join('');
+          <div class="rez-actiuni">
+            <span class="badge badge-${r.status === 'confirmata' ? 'confirmata' : r.status === 'anulata' ? 'anulata' : 'asteptare'}">
+              ${r.status === 'confirmata' ? '✓ Confirmată' : r.status === 'anulata' ? '✗ Anulată' : '⏳ În așteptare'}
+            </span>
+            ${r.status !== 'anulata' ? `<button class="btn btn-danger btn-sm" onclick="anuleaza(${r.id})">Anulează</button>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
   } catch (e) {
     lista.innerHTML = '<p style="color:var(--rosu)">Eroare la încărcarea rezervărilor.</p>';
   }
@@ -127,20 +344,17 @@ async function incarcaRezervari() {
 async function anuleaza(id) {
   if (!confirm('Ești sigur că vrei să anulezi această rezervare?')) return;
   const alertEl = document.getElementById('alert');
-
   try {
     const res  = await fetch(`/api/rezervari/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const date = await res.json();
-
     if (!res.ok) {
       alertEl.className = 'alert alert-error show';
       alertEl.textContent = date.mesaj;
       return;
     }
-
     alertEl.className = 'alert alert-success show';
     alertEl.textContent = 'Rezervarea a fost anulată.';
     incarcaRezervari();
@@ -150,7 +364,80 @@ async function anuleaza(id) {
   }
 }
 
+// ── Notificari ────────────────────────────────────────────────
+let notificariAfisate = [];
+let stareaRezervarilorAnterioare = {};
+
+function toggleMeniuNotificari() {
+  const menu = document.getElementById('notification-menu');
+  menu.classList.toggle('show');
+  if (menu.classList.contains('show')) document.getElementById('notification-badge').style.display = 'none';
+}
+
+function actualizeazaInterfataNotificari() {
+  const listContainer = document.getElementById('notification-list');
+  const badge = document.getElementById('notification-badge');
+  const menu  = document.getElementById('notification-menu');
+  if (!notificariAfisate.length) {
+    listContainer.innerHTML = '<p class="no-notifications">Nu ai notificări noi</p>';
+    badge.style.display = 'none';
+    return;
+  }
+  listContainer.innerHTML = notificariAfisate.map(msg => `<div class="notification-item">🔔 ${msg}</div>`).join('');
+  if (!menu.classList.contains('show')) badge.style.display = 'block';
+}
+
+function stergeToateNotificarile() { notificariAfisate = []; actualizeazaInterfataNotificari(); }
+
+async function verificaSchimbariStatus() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) return;
+    const rezervari = await res.json();
+    let modificariNoi = false;
+    rezervari.forEach(r => {
+      const statusVechi = stareaRezervarilorAnterioare[r.id];
+      if (statusVechi && statusVechi !== r.status) {
+        let textStatus = r.status === 'confirmata' ? 'confirmată ✔️' : 'anulată ❌';
+        notificariAfisate.unshift(`Rezervarea pentru masa ${r.numar_masa} din ${r.data.split('T')[0]} este acum ${textStatus}.`);
+        modificariNoi = true;
+      }
+      stareaRezervarilorAnterioare[r.id] = r.status;
+    });
+    if (modificariNoi) { actualizeazaInterfataNotificari(); incarcaRezervari(); }
+  } catch (err) {}
+}
+
+async function pornesteSistemNotificari() {
+  if (!token) return;
+  try {
+    const res = await fetch('/api/rezervari/ale-mele', { headers: { 'Authorization': `Bearer ${token}` } });
+    if (res.ok) {
+      const rezervari = await res.json();
+      rezervari.forEach(r => stareaRezervarilorAnterioare[r.id] = r.status);
+    }
+  } catch(e) {}
+  setInterval(verificaSchimbariStatus, 10000);
+}
+
+pornesteSistemNotificari();
 incarcaRezervari();
 </script>
+<div class="notification-widget">
+  <button class="notification-button" onclick="toggleMeniuNotificari()">
+    <span class="bell-icon">🔔</span>
+    <span id="notification-badge" class="notification-badge" style="display: none;"></span>
+  </button>
+  <div id="notification-menu" class="notification-menu">
+    <div class="notification-header">
+      <h3>Notificări</h3>
+      <button class="clear-all-btn" onclick="stergeToateNotificarile()">Șterge tot</button>
+    </div>
+    <div id="notification-list" class="notification-list">
+      <p class="no-notifications">Nu ai notificări noi</p>
+    </div>
+  </div>
+</div>
 </body>
 </html>

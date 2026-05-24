@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
   <title>Autentificare — Flavour House</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -30,13 +32,21 @@
 
     .auth-banner {
       background: linear-gradient(160deg, var(--maro) 0%, var(--maro-med) 100%);
-      padding: 3rem 2.5rem; display: flex; flex-direction: column; justify-content: center;
+      padding: 3rem 2.5rem; display: flex; flex-direction: column; 
+      justify-content: center; align-items: center; text-align: center;
       position: relative; overflow: hidden;
     }
 
     .auth-banner::before {
       content: '🍽️'; font-size: 12rem; position: absolute;
       right: -2rem; bottom: -2rem; opacity: 0.08; line-height: 1;
+    }
+
+    .auth-banner-logo {
+      height: 120px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 2rem;
     }
 
     .auth-banner-label {
@@ -105,6 +115,7 @@
 
 <div class="auth-wrapper">
   <div class="auth-banner">
+    <img src="logo.png" alt="Logo Flavour House" class="auth-banner-logo">
     <p class="auth-banner-label">Bun venit înapoi</p>
     <h2>O masă te așteaptă</h2>
     <p>Autentifică-te pentru a gestiona rezervările tale și a descoperi preparatele noastre.</p>
@@ -116,7 +127,6 @@
 
     <div id="alert" class="alert"></div>
 
-    <!-- Buton Google -->
     <a href="/api/auth/google" class="btn-google">
       <svg class="google-icon" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -146,7 +156,6 @@
 </div>
 
 <script>
-// Verificam daca e eroare de la Google
 const params = new URLSearchParams(window.location.search);
 if (params.get('error') === 'google') {
   const alertEl = document.getElementById('alert');
@@ -154,7 +163,6 @@ if (params.get('error') === 'google') {
   alertEl.textContent = 'Autentificarea cu Google a esuat. Incearca din nou.';
 }
 
-// Daca e deja autentificat, redirectam
 if (localStorage.getItem('token')) {
   const u = JSON.parse(localStorage.getItem('utilizator') || '{}');
   window.location.href = u.rol === 'admin' ? 'admin/dashboard.html' : 'rezervarile-mele.html';
