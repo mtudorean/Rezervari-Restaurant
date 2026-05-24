@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo.png">
+
+  <title>Gestionare Meniu — Flavour House</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body { display: flex; min-height: 100vh; }
+    .sidebar { 
+      width: 240px; min-height: 100vh; background: var(--maro); 
+      padding: 2rem 1.2rem; position: fixed; top: 0; left: 0; 
+      display: flex; flex-direction: column; gap: 0.3rem; 
+      box-sizing: border-box;
+    }
+    
+    /* Container pentru logo-ul din sidebar */
+    .sidebar-logo-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 0 0.5rem;
+      width: 100%;
+    }
+    .sidebar-logo-img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      transition: transform var(--transition);
+    }
+    .sidebar-logo-img:hover {
+      transform: scale(1.03);
+    }
+
+    .sidebar a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(245,240,232,0.65); text-decoration: none; font-size: 14px; font-weight: 500; transition: all var(--transition); }
+    .sidebar a:hover, .sidebar a.activ { background: rgba(200,146,42,0.15); color: var(--crem); }
+    .sidebar a.activ { color: var(--auriu); }
+    .sidebar-sep { height: 1px; background: rgba(245,240,232,0.1); margin: 0.5rem 0; }
+    .sidebar-bottom { margin-top: auto; }
+    .main-content { margin-left: 240px; flex: 1; padding: 2rem; }
+    .page-title { font-family: 'Times New Roman', serif; font-size: 1.9rem; color: var(--maro); margin-bottom: 0.3rem; }
+    .page-sub { color: var(--grid); font-size: 17px; margin-bottom: 2rem; }
+    .layout { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: start; }
+    .section-card { background: var(--alb); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid rgba(212,206,198,0.5); }
+    .section-card h3 { font-family: 'Times New Roman', serif; font-size: 1.6rem; color: var(--maro); margin-bottom: 1.2rem; }
+    .preparat-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--crem-dark); gap: 1rem; }
+    .preparat-row:last-child { border-bottom: none; }
+    .preparat-info { flex: 1; }
+    .preparat-info strong { font-size: 16px; color: var(--maro); }
+    .preparat-info small { font-size: 13px; color: var(--gri); display: block; }
+    .preparat-pret { font-weight: 600; color: var(--auriu); font-size: 14px; min-width: 80px; text-align: right; }
+    .preparat-actiuni { display: flex; gap: 6px; }
+    .indisponibil { opacity: 0.5; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .sidebar { display: none; } .main-content { margin-left: 0; } }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <a href="../index.html" class="sidebar-logo-wrapper">
+    <img src="../logo.png" alt="Logo Flavour House" class="sidebar-logo-img">
+  </a>
+  
+  <a href="dashboard.html">🗓️ Rezervări</a>
+  <a href="meniu.html" class="activ">🍽️ Meniu</a>
+  
+  <div class="sidebar-sep"></div>
+  
+  <div class="sidebar-bottom">
+    <a href="#" onclick="logout(event)">🚪 Deconectare</a>
+  </div>
+</aside>
+
+<main class="main-content">
+  <h1 class="page-title">Gestionare Meniu</h1>
+  <p class="page-sub">Adaugă, editează sau elimină preparate din meniu.</p>
+
+  <div id="alert" class="alert"></div>
+
+  <div class="layout">
+    <div class="section-card">
+      <h3>Preparate existente</h3>
+      <div id="lista-preparate">Se încarcă...</div>
+    </div>
+
+    <div class="section-card" style="position:sticky;top:20px">
+      <h3 id="form-titlu">➕ Preparat nou</h3>
+      <input type="hidden" id="edit-id">
+      
+      <div class="form-group"><label>Denumire</label><input type="text" id="denumire" placeholder="ex: Paste Carbonara"></div>
+      <div class="form-group"><label>Descriere</label><textarea id="descriere" placeholder="Descriere scurtă..."></textarea></div>
+      
+      <div class="form-group">
+        <label>Link Imagine (URL)</label>
+        <input type="text" id="imagine" placeholder="https://link-imagine.com/foto.jpg">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div class="form-group"><label>Preț (MDL)</label><input type="number" id="pret" step="0.01"></div>
+        
+        <div class="form-group">
+          <label>Rating (1.0 - 5.0)</label>
+          <input type="number" id="rating" step="0.1" min="1" max="5" placeholder="4.8">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Categorie</label>
+        <select id="categorie">
+          <option>Aperitive</option>
+          <option>Supe</option>
+          <option>Fel principal</option>
+          <option>Desert</option>
+          <option>Bauturi</option>
+        </select>
+      </div>
+      
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-full" onclick="salveaza()">Salvează</button>
+        <button class="btn btn-outline" onclick="resetForm()" id="btn-anuleaza" style="display:none">✕</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const token = localStorage.getItem('token');
+const utilizator = JSON.parse(localStorage.getItem('utilizator') || 'null');
+if (!token || !utilizator || utilizator.rol !== 'admin') window.location.href = '../login.html';
+
+function logout(e) { e.preventDefault(); localStorage.clear(); window.location.href = '../login.html'; }
+
+async function incarcaPreparate() {
+  try {
+    const res  = await fetch('/api/meniu');
+    const date = await res.json();
+    const lista = document.getElementById('lista-preparate');
+    if (!date.length) { lista.innerHTML = '<p style="color:var(--gri)">Nu există preparate.</p>'; return; }
+    lista.innerHTML = date.map(p => `
+      <div class="preparat-row ${p.este_disponibil ? '' : 'indisponibil'}">
+        <div class="preparat-info">
+          <strong>${p.denumire}</strong>
+          <small>${p.categorie} ${!p.este_disponibil ? '· <em>Indisponibil</em>' : ''}</small>
+        </div>
+        <div class="preparat-pret">${parseFloat(p.pret).toFixed(2)} MDL</div>
+        <div class="preparat-actiuni">
+          <button class="btn btn-outline btn-sm" onclick="editeaza(${JSON.stringify(p).replace(/"/g,'&quot;')})">Editează</button>
+          <button class="btn btn-danger btn-sm" onclick="sterge(${p.id})">Șterge</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) { document.getElementById('lista-preparate').innerHTML = '<p style="color:var(--rosu)">Eroare.</p>'; }
+}
+
+function editeaza(p) {
+  document.getElementById('edit-id').value     = p.id;
+  document.getElementById('denumire').value    = p.denumire;
+  document.getElementById('descriere').value   = p.descriere || '';
+  document.getElementById('imagine').value     = p.imagine || '';
+  document.getElementById('pret').value        = p.pret;
+  document.getElementById('rating').value      = p.rating || '5.0';
+  document.getElementById('categorie').value   = p.categorie;
+  
+  document.getElementById('form-titlu').textContent = '✏️ Editează preparat';
+  document.getElementById('btn-anuleaza').style.display = 'inline-flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.getElementById('edit-id').value   = '';
+  document.getElementById('denumire').value  = '';
+  document.getElementById('descriere').value = '';
+  document.getElementById('imagine').value   = '';
+  document.getElementById('pret').value      = '';
+  document.getElementById('rating').value    = '';
+  document.getElementById('form-titlu').textContent = '➕ Preparat nou';
+  document.getElementById('btn-anuleaza').style.display = 'none';
+}
+
+async function salveaza() {
+  const id        = document.getElementById('edit-id').value;
+  const denumire  = document.getElementById('denumire').value.trim();
+  const descriere = document.getElementById('descriere').value.trim();
+  const imagine   = document.getElementById('imagine').value.trim();
+  const pret      = parseFloat(document.getElementById('pret').value);
+  const rating    = parseFloat(document.getElementById('rating').value) || 5.0;
+  const categorie = document.getElementById('categorie').value;
+  const alertEl   = document.getElementById('alert');
+
+  alertEl.className = 'alert';
+  if (!denumire || !pret || !categorie) {
+    alertEl.className = 'alert alert-error show';
+    alertEl.textContent = 'Denumirea, prețul și categoria sunt obligatorii.';
+    return;
+  }
+
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url    = id ? `/api/meniu/${id}` : '/api/meniu';
+    const res    = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ 
+        denumire, 
+        descriere, 
+        imagine, 
+        pret, 
+        rating,  
+        categorie, 
+        este_disponibil: true 
+      })
+    });
+    
+    const date = await res.json();
+    if (!res.ok) { alertEl.className = 'alert alert-error show'; alertEl.textContent = date.mesaj; return; }
+    
+    alertEl.className = 'alert alert-success show';
+    alertEl.textContent = id ? 'Preparat actualizat!' : 'Preparat adăugat!';
+    resetForm(); 
+    incarcaPreparate();
+  } catch (e) { 
+    alertEl.className = 'alert alert-error show'; 
+    alertEl.textContent = 'Eroare de conexiune la server.'; 
+  }
+}
+
+async function sterge(id) {
+  if (!confirm('Elimini preparatul din meniu?')) return;
+  const alertEl = document.getElementById('alert');
+  try {
+    const res  = await fetch(`/api/meniu/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+    const date = await res.json();
+    if (!res.ok) { alertEl.className = 'alert alert-error show'; alertEl.textContent = date.mesaj; return; }
+    alertEl.className = 'alert alert-success show';
+    alertEl.textContent = 'Preparat eliminat din meniu.';
+    incarcaPreparate();
+  } catch (e) { alertEl.className = 'alert alert-error show'; alertEl.textContent = 'Eroare.'; }
+}
+
+incarcaPreparate();
+</script>
+</body>
+</html>
